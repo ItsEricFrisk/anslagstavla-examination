@@ -1,0 +1,98 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: skolprojekt
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: ans-backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  stage: dev
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource: "*"
+
+build:
+  esbuild:
+    minify: true
+
+package:
+  individually: true
+
+functions:
+  getPosts:
+    handler: ./functions/getPosts/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: get
+
+  deletePosts:
+    handler: ./functions/deletePosts/index.handler
+    events:
+      - httpApi:
+          path: /posts/{id}
+          method: delete
+
+  updatePosts:
+    handler: ./functions/updatePosts/index.handler
+    events:
+      - httpApi:
+          path: /posts/{id}
+          method: put
+
+  createPosts:
+    handler: ./functions/createPosts/index.handler
+    events:
+      - httpApi:
+          path: /posts
+          method: post
+
+  createUser:
+    handler: ./functions/createUser/index.handler
+    events:
+      - httpApi:
+          path: /user/{id}
+          method: post
+
+  getUser:
+    handler: ./functions/getUser/index.handler
+    events:
+      - httpApi:
+          path: /user
+          method: get
+
+resources:
+  Resources:
+    ansMessages:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ans-messages
+        AttributeDefinitions:
+          - AttributeName: messageId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: messageId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    ansUsers:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ans-users
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
