@@ -40,14 +40,14 @@ functions:
     handler: ./functions/deletePosts/index.handler
     events:
       - httpApi:
-          path: /posts/{id}
+          path: /posts/{user}/{postId}
           method: delete
 
   updatePosts:
     handler: ./functions/updatePosts/index.handler
     events:
       - httpApi:
-          path: /posts/{id}
+          path: /posts/{user}/{postId}
           method: put
 
   createPosts:
@@ -57,42 +57,27 @@ functions:
           path: /posts
           method: post
 
-  createUser:
-    handler: ./functions/createUser/index.handler
-    events:
-      - httpApi:
-          path: /user/{id}
-          method: post
-
   getUser:
     handler: ./functions/getUser/index.handler
     events:
       - httpApi:
-          path: /user
+          path: /user/{username}
           method: get
 
 resources:
   Resources:
-    ansMessages:
+    anslagstavla:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ans-messages
+        TableName: anslagstavla
         AttributeDefinitions:
-          - AttributeName: messageId
+          - AttributeName: user
+            AttributeType: S
+          - AttributeName: postId
             AttributeType: S
         KeySchema:
-          - AttributeName: messageId
+          - AttributeName: user
             KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
-
-    ansUsers:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ans-users
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
+          - AttributeName: postId
+            KeyType: RANGE
         BillingMode: PAY_PER_REQUEST

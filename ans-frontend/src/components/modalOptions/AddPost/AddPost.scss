@@ -1,0 +1,42 @@
+.addContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: #fff;
+
+  &__message {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    font-size: 1.2em;
+    resize: none;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__user {
+    padding: 5px;
+    font-style: italic;
+    font-weight: 300;
+    margin: 10px 0;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__addBtn {
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 5px;
+    user-select: none;
+    align-self: flex-end;
+    margin: 0px 10px;
+    background-color: rgba(239, 67, 67, 1);
+  }
+}

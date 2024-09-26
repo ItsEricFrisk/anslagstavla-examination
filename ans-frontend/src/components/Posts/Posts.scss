@@ -1,0 +1,49 @@
+.postContainer {
+  padding: 10px 0;
+  width: 70%;
+  height: 100vh;
+  overflow-y: scroll;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.post {
+  width: 100%;
+  height: auto;
+  background-color: #fff;
+  padding: 10px;
+  margin: 20px 0;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  border-radius: 4px;
+
+  &__date {
+    font-size: 1rem;
+    font-weight: 300;
+  }
+
+  &__message {
+    width: 90%;
+    height: auto;
+    margin: 20px;
+    font-size: 1.2rem;
+  }
+
+  &__user {
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+  }
+  &:hover {
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset,
+      rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  }
+}

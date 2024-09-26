@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.scss";
+import { useStore } from "./zustand/store";
+import NewPostBtn from "./components/NewPostBtn/NewPostBtn";
+import Posts from "./components/Posts/Posts";
+import Modal from "react-modal";
+import EditPost from "./components/modalOptions/EditPost/EditPost";
+import AddPost from "./components/modalOptions/AddPost/AddPost";
+import FetchPost from "./components/FetchPost/FetchPost";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { modalIsOpen, modalContent, openModal, closeModal } = useStore();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="container">
+      <FetchPost />
+      <Posts openModal={() => openModal("editPost")} />
+      <NewPostBtn openModal={() => openModal("newPost")} />
+      <Modal
+        ariaHideApp={false}
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        {modalContent === "newPost" && <AddPost closeModal={closeModal} />}
+        {modalContent === "editPost" && <EditPost closeModal={closeModal} />}
+      </Modal>
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,17 +1,18 @@
 const { db } = require("../../services/db");
 const { sendError, sendResponse } = require("../../responses/responses");
-const { v4: uuidv4 } = require("uuid");
+const { nanoid } = require("nanoid");
 
 // Takes input from the arguments and creates a new post
-async function createPost(body, messageId, currentDate) {
+async function createPost(body, currentDate, timestamp, postId) {
   try {
     await db.put({
-      TableName: "ans-messages",
+      TableName: "anslagstavla",
       Item: {
-        messageId: messageId,
-        message: body.message,
+        postId: postId,
         user: body.user,
+        message: body.message,
         createdAt: currentDate,
+        timestamp: timestamp,
       },
     });
   } catch (error) {
@@ -24,20 +25,23 @@ async function createPost(body, messageId, currentDate) {
 function createDate() {
   try {
     let date = new Date();
-    // Aws uses another time zone so this is needed
-    date.setHours(date.getHours() + 2);
-    const currentDate =
-      date.getDate() +
-      "/" +
-      (date.getMonth() + 1) +
-      "-" +
-      date.getFullYear() +
-      " " +
-      date.getHours() +
-      ":" +
-      date.getMinutes();
+    // Aws uses another time zone so this is needed for Swedish time
+    const options = {
+      timeZone: "Europe/Stockholm",
+      weekday: "short",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false,
+    };
 
-    return currentDate;
+    // Formatted as a string for the user
+    const currentDate = date.toLocaleString("sv-SE", options);
+    // Formatted as a number for sorting
+    const timestamp = date.getTime();
+
+    return { currentDate, timestamp };
   } catch (error) {
     console.error(error);
   }
@@ -53,13 +57,14 @@ exports.handler = async (event) => {
   }
 
   // Create todays date and time
-  const currentDate = createDate();
+  const { currentDate, timestamp } = createDate();
+
   // Create id
-  const messageId = uuidv4();
+  const postId = nanoid(8);
 
   try {
     // Runs the function to create the post
-    await createPost(body, messageId, currentDate);
+    await createPost(body, currentDate, timestamp, postId);
     // Return success
     return sendResponse("Post added");
   } catch (error) {
