@@ -52,6 +52,7 @@ export default function AddPost({ closeModal }) {
         maxLength={"200"}
         autoFocus
         required
+        placeholder="Message"
       />
       <input
         type="text"

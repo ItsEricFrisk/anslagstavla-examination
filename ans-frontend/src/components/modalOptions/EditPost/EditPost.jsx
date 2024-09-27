@@ -82,7 +82,7 @@ export default function EditPost({ closeModal }) {
       <textarea
         className="updateContainer__message"
         onChange={(e) => setUpdatedMessage(e.target.value)}
-        placeholder="New message:"
+        placeholder="New message"
         maxLength={"200"}
         autoFocus
         required
